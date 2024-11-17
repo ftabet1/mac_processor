@@ -31,8 +31,7 @@ module mul #(parameter opsize = 8)
 		case(sel)
 			0: mult = 0;
 			1: mult = MN;//OUT[(opsize*2)-1:opsize];
-			2: mult = twos_compl;
-			3: mult = twos_compl;
+			default: mult = twos_compl;
 		endcase
 	end
 	
