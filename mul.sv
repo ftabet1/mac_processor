@@ -27,7 +27,7 @@ module mul #(parameter opsize = 8)
 	reg[opsize-1:0] mult;
 	assign sel[0] = OUT[0];
 	assign sel[1] = cnt==(opsize-1) && MTsign ? 1 : 0;
-	always@(OUT or sel or MN) begin
+	always@(sel or MN) begin
 		case(sel)
 			0: mult = 0;
 			1: mult = MN;//OUT[(opsize*2)-1:opsize];
@@ -51,16 +51,12 @@ module mul #(parameter opsize = 8)
 				cnt++;
 				OUT[opsize-2:0] = {OUT[opsize-1], OUT[opsize-2:1]};
 				OUT[(opsize*2)-2:opsize-1] = sum[opsize-1:0];
-				OUT[(opsize*2)-1] = MN[opsize-1] ? (dopsign | sum[opsize-1]) : 0;
 				dopsign = dopsign | sum[opsize-1];
+				OUT[(opsize*2)-1] = MN[opsize-1] ? dopsign : 0;
 			end else begin
 				ready = 1;
 				state = p_state_idle;
-				if((MTsign != 0 && MN[opsize-1] == 0) || (MTsign == 0 && MN[opsize-1] != 0)) begin
-					OUT[(opsize*2)-1] = 1;
-				end else if((MTsign == 0 && MN[opsize-1] == 0) || (MTsign != 0 && MN[opsize-1] != 0)) begin
-					OUT[(opsize*2)-1] = 0;
-				end
+				OUT[(opsize*2)-1] = MTsign ^ MN[opsize-1];
 			end
 		end
 	end
@@ -114,7 +110,7 @@ module testmul;
 		start = 1;
 		#2
 		start = 0;
-		#30
+		#500
 		$finish;
 	end
 endmodule

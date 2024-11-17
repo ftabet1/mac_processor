@@ -19,7 +19,7 @@ module mac #(parameter opsize = 8)
 endmodule
 
 module testmac;
-	parameter opsize = 4;
+	parameter opsize = 8;
 	reg start = 0;
 	reg clk = 0;
 	wire ready;
@@ -41,19 +41,25 @@ module testmac;
 		start = 0;
 		#30
 		A = 48;
+		B = -110;
+		start = 1;
+		#2
+		start = 0;
+		#30
+		A = -48;
 		B = 110;
 		start = 1;
 		#2
 		start = 0;
 		#30
-		A = 110;
-		B = 48;
+		A = -48;
+		B = -110;
 		start = 1;
 		#2
 		start = 0;
 		#30
-		A = 48;
-		B = -110;
+		A = -1;
+		B = -1;
 		start = 1;
 		#2
 		start = 0;
